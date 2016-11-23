@@ -37,6 +37,7 @@ public class SQLCommunication {
     public void signup(String username, String password){
         connect(username, password, signupURL);
     }
+
     public void connect(final String username, final String password, String url){
         System.out.println("************* LOGIN IN **************");
         StringRequest req = new StringRequest(Request.Method.POST, url, new Response.Listener<String>(){
