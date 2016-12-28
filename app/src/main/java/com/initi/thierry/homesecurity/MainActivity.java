@@ -1,21 +1,21 @@
 package com.initi.thierry.homesecurity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends Activity implements View.OnClickListener{
     private Button signupBt, loginBt;
     private EditText unameField, passField;
+    private TextView messageText;
     private SQLCommunication communication;
 
     @Override
@@ -28,6 +28,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         loginBt = (Button) findViewById(R.id.loginButton);
         unameField = (EditText) findViewById(R.id.uname_text);
         passField = (EditText) findViewById(R.id.pass_text);
+        messageText = (TextView) findViewById(R.id.messageText);
 
         //init listeners
         signupBt.setOnClickListener(this);
@@ -52,10 +53,16 @@ public class MainActivity extends Activity implements View.OnClickListener{
     public void loginUser(){
         String uname = unameField.getText().toString();
         String pass = passField.getText().toString();
-        if(uname.isEmpty() ||pass.isEmpty())
-            Log.e("LOGIN_ERROR", "Les champs sont vides");
+        String resp =  communication.login(uname, pass);
+        if(resp.equals("{\"result\":[1]}")){
+            System.out.println("Successful login");
+            Intent userHomeIntent = new Intent(MainActivity.this, UserHomeActivity.class);
+            userHomeIntent.putExtra("uname", uname);
+            MainActivity.this.startActivity(userHomeIntent);
+        }
         else{
-            communication.login(uname, pass);
+            System.out.println("Login fail = " +resp);
+            messageText.setText("Username ou password incorrect. Veuillez réessayer ou créer un compte");
         }
 
     }
@@ -66,6 +73,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
             Log.e("SIGNUP_ERROR", "Les champs sont vides");
         else{
             communication.signup(uname, pass);
+            messageText.setText("Username ou password incorrect. Veuillez réessayer ou créer un compte");
         }
     }
 

@@ -1,12 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+
     tools:context="com.initi.thierry.homesecurity.UserHomeActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="horizontal"
+        android:background="#2d302d"
+        android:id="@+id/topNav">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".4"
+            android:id="@+id/imageView"
+            android:background="#ffffff"
+            android:layout_margin="5dp"
+            android:src="@drawable/user_icon"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight=".6"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="Username"
+                android:id="@+id/unameField"
+                android:textColor="#ffffff"
+                android:textSize="20dp"
+                android:textAlignment="viewEnd"
+                android:layout_marginRight="5dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal"
+        android:layout_below="@+id/topNav"
+        android:layout_marginBottom="10dp"
+        android:background="#ffffff">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:background="#dc40403c"
+            android:id="@+id/buttonConntainer">
+
+            <Button android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:text="Graph"
+                android:id="@+id/graphBt"/>
+
+            <Button android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:text="Update data"
+                android:id="@+id/updateBt"/>
+
+            <Button android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:text="DELETE ALL"
+                android:id="@+id/deleteAllBt"
+                />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="190dp"
+        android:id="@+id/eventsListView"
+        android:background="#cccccc"
+        ></ListView>
+
+
+
 
 </RelativeLayout>
