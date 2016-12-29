@@ -126,8 +126,12 @@ public class SQLCommunication {
                         String date = event.getString("date");
                         String imageName = event.getString("image_name");
                         Log.d("FETCHED","id : " + id + " capteur : " + idCapteur + " date :" + date +" userid : "+ userId+ " imgName: "+imageName);
+
                         //byte[] imgByte  = new byte[1500];//= Base64.decode(event.getString("image"), Base64.DEFAULT) ;
                         //Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
+
+                        //insertion dans la basz de données
+
 
                         //insertion dans l'arraylist
                         userDataArrayList.add(new UserData(id, userId, idCapteur, null, imageName, date ));
@@ -155,7 +159,7 @@ public class SQLCommunication {
     }
 
     public ArrayList <UserData> getUserDataArrayList(){
-        return this.userDataArrayList;
+        return userDataArrayList;
     }
     public void printUserDataArrayList(){
         for(int i=0; i< userDataArrayList.size(); i++){

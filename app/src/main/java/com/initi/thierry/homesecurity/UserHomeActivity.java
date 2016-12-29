@@ -49,6 +49,7 @@ public class UserHomeActivity extends Activity implements View.OnClickListener{
         graphBt.setOnClickListener(this);
 
         onItemClickedAction();
+        initView();
     }
     private void onItemClickedAction(){
         ListView listView = (ListView) findViewById(R.id.eventsListView);
@@ -63,13 +64,27 @@ public class UserHomeActivity extends Activity implements View.OnClickListener{
     }
     public void setUserID(String userID){this.userID = userID;}
     public String getUserID(){return userID;}
-
+    public void updateUserData(){
+        poulateListView();
+    }
+    public void deleteAllUserData(){
+        DatabaseOperations dop = new DatabaseOperations(this);
+        dop.deleteAllEvent(dop );
+    }
     public void poulateListView(){
         SQLCommunication com = new SQLCommunication(this);
         com.fetchSiteDatabaseEvents();
         userData.clear();
-        userData = com.getUserDataArrayList();
-        if(userData.isEmpty()) Log.e("User Data", "empty array list");
+        userData = new ArrayList<UserData>();
+        ArrayList <UserData> data = com.getUserDataArrayList();
+        DatabaseOperations dop = new DatabaseOperations(this);
+        for(int i= 0; i< data.size(); i++){
+            UserData uData = data.get(i);
+            userData.add(new UserData(uData.getId(), uData.getUserId(), uData.getIdCapteur(), null, uData.getImageName(), uData.getDate(),""));
+            dop.insertEvent(dop,uData.getId(), uData.getUserId(), uData.getIdCapteur(), null, uData.getImageName(), uData.getDate());
+        }
+        if(userData.isEmpty()) Log.e("User Data No insertion", "empty array list");
+
 
         ArrayAdapter <UserData> adapter = new EventListAdapter();
         eventListView = (ListView) findViewById(R.id.eventsListView);
@@ -78,9 +93,9 @@ public class UserHomeActivity extends Activity implements View.OnClickListener{
 
     public void initView(){
         byte []byt = new byte[100];
-        userData.add(new UserData("1","2", "capt1", byt, "imagename", "2015--01-12",  "image0"));
-        userData.add(new UserData("1","2", "capt2", byt, "new", "2015--01-12",  "image0"));
-        userData.add(new UserData("1", "2", "capt3", byt, "test", "2015--01-12", "image0"));
+        userData.add(new UserData("1","2", "capt1", byt, "imagename", "2015-01-12",  "image0"));
+        userData.add(new UserData("1","2", "capt2", byt, "new", "2015-01-12",  "image0"));
+        userData.add(new UserData("1", "2", "capt3", byt, "test", "2015-01-12", "image0"));
 
         ///populate
         ArrayAdapter <UserData> adapter = new EventListAdapter();
@@ -88,13 +103,11 @@ public class UserHomeActivity extends Activity implements View.OnClickListener{
         eventListView.setAdapter(adapter);
     }
 
-    public void updateUserData(){
 
-    }
 
 
     public void getUserEvents(){}
-    public void deleteAllUserData(){}
+
     public void updateUserInfo(){};
     public void deleteDataByID(){}
 
@@ -106,11 +119,10 @@ public class UserHomeActivity extends Activity implements View.OnClickListener{
                 com.imageRequest(null);
                 break;
             case R.id.deleteAllBt:
-                poulateListView();
+                deleteAllUserData();
                 break;
             case R.id.updateBt:
-                //updateUserData();
-                initView();
+                updateUserData();
                 break;
         }
     }

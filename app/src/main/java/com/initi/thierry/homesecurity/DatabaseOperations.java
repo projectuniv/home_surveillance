@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.initi.thierry.homesecurity.EventsData.EventTable;
 
 /**
@@ -15,7 +17,7 @@ public class DatabaseOperations extends SQLiteOpenHelper {
     public final static int databaseVersion = 1;
     public String CREATE_QUERY = "CREATE TABLE IF NOT EXISTS" + EventTable.TABLE_NAME +
             "("+ EventTable.ID + "TEXT, "+ EventTable.ID_CAPTEUR+ "TEXT, "+ EventTable.IMAGE_NAME + " TEXT, " +
-            EventTable.IMAGE + " BLOB, "+ EventTable.DATE + " TEXT, "+ EventTable.USER_ID+ " TEXT, "+ "PRIMARY KEY ("+EventTable.ID+") );";
+            EventTable.IMAGE + " BLOB NULL, "+ EventTable.DATE + " TEXT, "+ EventTable.USER_ID+ " TEXT, "+ "PRIMARY KEY ("+EventTable.ID+") );";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -28,19 +30,24 @@ public class DatabaseOperations extends SQLiteOpenHelper {
         Log.d("Database Operation ", " Database created");
     }
 
-    public void insertEvent(DatabaseOperations dop, String id, String idCapteur, byte [] image ,String imageName, String date, String userId){
+    public void insertEvent(DatabaseOperations dop, String id,  String userId, String idCapteur, byte [] image ,String imageName, String date){
         SQLiteDatabase sqlDB = dop.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(EventTable.ID, id);
-        cv.put(EventTable.ID_CAPTEUR, idCapteur);
-        cv.put(EventTable.IMAGE, image);
-        cv.put(EventTable.IMAGE_NAME, imageName);
-        cv.put(EventTable.DATE, date);
-        cv.put(EventTable.USER_ID, userId);
+        String []columns = {EventTable.USER_ID};
+        Cursor c = sqlDB.query(EventTable.TABLE_NAME, columns, "_id=?", new String[]{id}, null, null, null);
+        if(c.getCount() < 1){
+            ContentValues cv = new ContentValues();
+            cv.put(EventTable.ID, id);
+            cv.put(EventTable.ID_CAPTEUR, idCapteur);
+            //cv.put(EventTable.IMAGE, image);
+            cv.put(EventTable.IMAGE_NAME, imageName);
+            cv.put(EventTable.DATE, date);
+            cv.put(EventTable.USER_ID, userId);
 
-        long k = sqlDB.insert(EventTable.TABLE_NAME, null,cv);
-        Log.d("Database Operation "," One row inserted");
-        //Toast.makeText(this, "One row inserted", Toast.).show();
+            long k = sqlDB.insert(EventTable.TABLE_NAME, null,cv);
+            Log.d("Database Operation "," One row inserted id= "+id);
+        }else{
+            Log.d("Database Operation "," One row not inserted id= "+id);
+        }
     }
 
     public Cursor fecthEvent(DatabaseOperations dop, String userId){
@@ -52,9 +59,9 @@ public class DatabaseOperations extends SQLiteOpenHelper {
         Log.d("Database Operation "," Data has been fetched");
         return c;
     }
-    public void deleteAllEvent(DatabaseOperations dop, String userId){
+    public void deleteAllEvent(DatabaseOperations dop){
         SQLiteDatabase sqlDB = dop.getWritableDatabase();
-        String query = "DELETE FROM "+EventTable.TABLE_NAME+" WHERE "+EventTable.USER_ID+ " = "+userId+" ;";
+        String query = "DELETE FROM "+EventTable.TABLE_NAME+" ;";
         sqlDB.execSQL(query);
         Log.d("Database Operation "," All data has been deleted");
     }
